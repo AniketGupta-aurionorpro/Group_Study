@@ -25,7 +25,7 @@ public class PairSum {
 
     public static void main(String[] args) {
         ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 3, 2, 2, 4, 5));
-        System.out.println(findPairs(list, 5)); // Output: [[1, 4], [3, 2]]
+        System.out.println(findPairs(list, 5)); 
     }
 }
 
