@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>25 Minute</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #timer {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-size: 18px;
+      margin: 5px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">25:00</div>
+
+  <button onclick="startTimer()">Start</button>
+  <button onclick="pauseTimer()">Pause</button>
+  <button onclick="resetTimer()">Reset</button>
+
+  <script>
+    let totalSeconds = 25 * 60;  
+    let timeLeft = totalSeconds; // keep track how much time is left 
+    let intervalId = null; // Used   ID of setInterval, so we can stop it later.
+
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60; // convert timeleft to min. & sec.
+      document.getElementById("timer").textContent =
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; //MM:SS --FORMAT 
+    }
+
+    function startTimer() {
+      if (intervalId !== null) return; // prevent double intervals
+
+      intervalId = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;       // Decrease time by 1 second
+          updateDisplay();  // Show updated time
+        } else {
+          clearInterval(intervalId);// Stop timer when finished
+          intervalId = null;
+        }
+      }, 1000); // // Run every 1000 ms = 1 second
+    }
+
+    function pauseTimer() {
+      clearInterval(intervalId); // stop count
+      intervalId = null;
+    }
+
+    function resetTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      timeLeft = totalSeconds;  
+      updateDisplay();
+    }
+
+    updateDisplay();  
+  </script>
+
+</body>
+</html>
