@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Electricity Bill Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Electricity Bill </h2>
+
+    <label for="firstname">First Name:</label>
+    <input type="text" id="firstname" name="firstname" required>
+
+    <label for="lastname">Last Name:</label>
+    <input type="text" id="lastname" name="lastname" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="units">Units Consumed:</label>
+    <input type="number" id="units" name="units" placeholder="Enter total units used" required>
+
+    <button onclick="generateBill()">Generate Bill</button>
+
+    <div class="output" id="result" style="display:none;"></div>
+  </div>
+
+  <script src="elecscript.js"></script>
+</body>
+</html>
