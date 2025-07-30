@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Electricity Bill Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffe9ca;
+      padding: 30px;
+    }
+
+    .container {
+      background-color: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .bill-details {
+      margin-top: 30px;
+      font-size: 16px;
+    }
+
+    .bill-details strong {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Electricity Bill Calculator</h2>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <label for="customerId">Customer ID:</label>
+    <input type="text" id="customerId" placeholder="Enter your customer ID">
+
+    <label for="units">Units Consumed:</label>
+    <input type="number" id="units" placeholder="Enter units consumed">
+
+    <button onclick="calculateBill()">Calculate Bill</button>
+
+    <div class="bill-details" id="result"></div>
+  </div>
+
+  <script>
+    function calculateBill() {
+      const name = document.getElementById("name").value;
+      const customerId = document.getElementById("customerId").value;
+      const units = parseFloat(document.getElementById("units").value);
+      let totalCost = 0;
+
+      if (units <= 199) {
+        totalCost = units * 1.2;
+      } else if (units <= 399) {
+        totalCost = (199 * 1.2) + ((units - 199) * 1.5);
+      } else if (units <= 599) {
+        totalCost = (199 * 1.2) + (200 * 1.5) + ((units - 399) * 1.8);
+      } else {
+        totalCost = (199 * 1.2) + (200 * 1.5) + (200 * 1.8) + ((units - 599) * 2.0);
+      }
+
+      // Apply surcharge if total exceeds ₹500
+      if (totalCost > 500) {
+        totalCost *= 1.15; // Add 15% surcharge
+      }
+
+      // Minimum bill ₹100
+      if (totalCost < 100) {
+        totalCost = 100;
+      }
+
+      totalCost = totalCost.toFixed(2);
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <h3>Bill Details</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Customer ID:</strong> ${customerId}</p>
+        <p><strong>Units Consumed:</strong> ${units}</p>
+        <p><strong>Total Cost:</strong> ₹${totalCost}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
