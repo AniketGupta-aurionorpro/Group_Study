@@ -10,6 +10,8 @@
 <title>Admin Dashboard - Leave Management</title>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/css/AdminDashboard.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/css/snackbar.css' />">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
 <link
@@ -126,6 +128,8 @@
 		</div>
 
 	</div>
+	
+	<div id="snackbar">Updated Holidays</div>
 	<script src="<c:url value='/js/AdminDashboard.js'/>"></script>
 </body>
 </html>

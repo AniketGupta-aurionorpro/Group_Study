@@ -145,6 +145,8 @@ document.addEventListener("DOMContentLoaded", function() {
 					reasonInput.value = "";
 					document.getElementById("holiday-action").style.display = "none";
 					refreshCalendar(); // repaint immediately
+					snackbarFunction();
+					console.log("update");
 				} else {
 					alert("Failed to add holiday.");
 				}
@@ -169,6 +171,7 @@ function deleteHoliday(date) {
 				delete indianHolidays[date];
 				renderHolidayList();
 				refreshCalendar(); // repaint immediately
+				snackbarFunction();
 			} else {
 				alert("Failed to remove holiday.");
 			}
@@ -269,3 +272,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+function snackbarFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}

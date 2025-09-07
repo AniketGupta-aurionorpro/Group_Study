@@ -93,13 +93,14 @@ public class LeaveDAO {
 		return leaves;
 	}
 
-	public boolean updateLeaveStatus(int leaveId, String status, int adminId) {
-	    String sql = "UPDATE leaves SET status=?, approved_by=?, approved_on=CURRENT_TIMESTAMP WHERE id=?";
+	public boolean updateLeaveStatus(int leaveId, String status, int adminId, String reason) {
+	    String sql = "UPDATE leaves SET status=?, approved_by=?, approved_on=CURRENT_TIMESTAMP, rejection_reason=? WHERE id=?";
 	    try (Connection con = datasource.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
 	        ps.setString(1, status);
 	        ps.setInt(2, adminId);
-	        ps.setInt(3, leaveId);
+	        ps.setString(3, reason);
+	        ps.setInt(4, leaveId);
 	        return ps.executeUpdate() > 0;
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -133,6 +134,36 @@ public class LeaveDAO {
 	                    ps2.setInt(1, userId);
 	                    ps2.setString(2, message);
 	                    return ps2.executeUpdate() > 0;
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+
+	public boolean updateBalance(int leaveId) {
+	    String getUserIdQuery = "SELECT user_id, DATEDIFF(end_date, start_date) + 1 AS days " +
+	                            "FROM leaves WHERE id=? AND status='APPROVED'";
+	    String updateBalanceQuery = "UPDATE leave_balance " +
+	                                "SET yearly_leave_taken = yearly_leave_taken + ? " +
+	                                "WHERE user_id=? AND year=YEAR(CURDATE())";
+
+	    try (Connection con = datasource.getConnection();
+	         PreparedStatement ps1 = con.prepareStatement(getUserIdQuery)) {
+
+	        ps1.setInt(1, leaveId);
+	        try (ResultSet rs = ps1.executeQuery()) {
+	            if (rs.next()) {
+	                int userId = rs.getInt("user_id");
+	                int days = rs.getInt("days"); // number of days for this leave
+
+	                try (PreparedStatement ps2 = con.prepareStatement(updateBalanceQuery)) {
+	                    ps2.setInt(1, days);
+	                    ps2.setInt(2, userId);
+	                    int updated = ps2.executeUpdate();
+	                    return updated > 0;
 	                }
 	            }
 	        }

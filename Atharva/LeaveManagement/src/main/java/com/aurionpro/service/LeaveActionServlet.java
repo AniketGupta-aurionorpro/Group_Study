@@ -28,6 +28,7 @@ public class LeaveActionServlet extends HttpServlet {
             throws IOException {
         String leaveIdStr = request.getParameter("leaveId");
         String action = request.getParameter("action");
+        String reason = request.getParameter("reason");
         HttpSession session = request.getSession();
         User admin = (User) session.getAttribute("admin");
 
@@ -39,11 +40,18 @@ public class LeaveActionServlet extends HttpServlet {
 
             boolean success = false;
             if ("APPROVE".equalsIgnoreCase(action)) {
-                success = LeaveDao.updateLeaveStatus(leaveId, "APPROVED", adminId);
-                boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "APPROVED");
+                success = LeaveDao.updateLeaveStatus(leaveId, "APPROVED", adminId, reason);
+                if (success) {
+                    boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "APPROVED");
+                    boolean updation = LeaveDao.updateBalance(leaveId);
+                    success = leaveNotification && updation; // final success only if both succeed
+                }
             } else if ("REJECT".equalsIgnoreCase(action)) {
-                success = LeaveDao.updateLeaveStatus(leaveId, "REJECTED", adminId);
-                boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "REJECTED");
+                success = LeaveDao.updateLeaveStatus(leaveId, "REJECTED", adminId, reason);
+                if (success) {
+                    boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "REJECTED");
+                    success = leaveNotification;
+                }
             }
 
             result.put("success", success);

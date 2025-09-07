@@ -6,12 +6,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Pending Requests - Leave Management</title>
-	<link rel="stylesheet" type="text/css"
-		href="<c:url value='/css/AdminDashboard.css' />">
-	<link rel="stylesheet" type="text/css"
-		href="<c:url value='/css/Request.css' />">
-	<link 
+<title>Pending Requests - Leave Management</title>
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/css/AdminDashboard.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/css/Request.css' />">
+<link
 	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
 	rel="stylesheet" />
 </head>
@@ -20,11 +20,12 @@
 		<h2>Admin Dashboard</h2>
 		<a href="${pageContext.request.contextPath}/admin?command=DASHBOARD"
 			class="btn"><span class="material-symbols-outlined">
-				calendar_month</span>Callender</a> 
-		<a href="" class="btn"><span class="material-symbols-outlined">menu</span>Requests</a> 
-		<a href="" class="btn"><span class="material-symbols-outlined">person_add</span>Add Employee</a> 
-		<a href="" class="btn"><span class="material-symbols-outlined">groups</span>View Employee</a> 
-		<a href="" class="btn"><span class="material-symbols-outlined">logout</span>Logout</a>
+				calendar_month</span>Callender</a> <a href="" class="btn"><span
+			class="material-symbols-outlined">menu</span>Requests</a> <a href=""
+			class="btn"><span class="material-symbols-outlined">person_add</span>Add
+			Employee</a> <a href="" class="btn"><span
+			class="material-symbols-outlined">groups</span>View Employee</a> <a
+			href="" class="btn"><span class="material-symbols-outlined">logout</span>Logout</a>
 	</div>
 
 	<div class="content">
@@ -47,23 +48,35 @@
 
 							<!-- Display overlapping users -->
 							<c:if test="${not empty approvedLeaves[req.id]}">
-								<button class="collapsible"><b>${fn:length(approvedLeaves[req.id])} Employees on leave during this period:</b></button>
+								<button class="collapsible">
+									<b>${fn:length(approvedLeaves[req.id])} Employees on leave
+										during this period:</b>
+								</button>
 								<div class="collapsible-content">
-									 <ul>
+									<ul>
 										<c:forEach var="u" items="${approvedLeaves[req.id]}">
-											<li>${u.name}(${u.role}) - ${u.email}</li>
+											<li>${u.name}(${u.role})- ${u.email}</li>
 										</c:forEach>
 									</ul>
 								</div>
 							</c:if>
 
-							<form>
+							<form id="leaveForm-${req.id}">
 								<input type="hidden" name="leaveId" value="${req.id}">
-								<button type="button" name="action"
+
+								<!-- reason text is hidden initially -->
+								<div class="rejection" style="display: none;">
+									<input type="text" name="rejectReason"
+										id="rejectReason-${req.id}"
+										placeholder="Enter rejection reason">
+									<button type="button" onclick="confirmReject(${req.id})"
+										class="btn-reject">Confirm Reject</button>
+								</div>
+
+								<button type="button"
 									onclick="takeLeaveAction(${req.id}, 'APPROVE')"
 									class="btn-approve">Approve</button>
-								<button type="button" name="action"
-									onclick="takeLeaveAction(${req.id}, 'REJECT')"
+								<button type="button" onclick="showRejectBox(${req.id})"
 									class="btn-reject">Reject</button>
 							</form>
 						</div>

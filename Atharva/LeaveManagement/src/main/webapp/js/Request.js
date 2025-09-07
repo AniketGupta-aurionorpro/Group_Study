@@ -1,26 +1,26 @@
-function takeLeaveAction(leaveId, action) {
+function takeLeaveAction(leaveId, action, reason = "Leave Approved") {
+    const params = new URLSearchParams();
+    params.append("leaveId", leaveId);
+    params.append("action", action);
+    params.append("reason", reason);
+
     fetch("leaveAction", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `leaveId=${leaveId}&action=${action}`
+        body: params.toString()
     })
     .then(res => res.json())
     .then(result => {
         if (result.success) {
-            // find the card for this request
             const card = document.querySelector(`.request-card input[value='${leaveId}']`)
                                 .closest(".request-card");
-
-            // remove the form with buttons
             const form = card.querySelector("form");
             if (form) form.remove();
 
-            // add status text
             const statusEl = document.createElement("p");
-            statusEl.innerHTML = `Status: <b>${action}</b>`;
+            statusEl.innerHTML = `Status: <b>${action}</b> ${reason ? " - " + reason : ""}`;
             card.appendChild(statusEl);
 
-            // change background to grey
             card.classList.add("resolved");
         } else {
             alert(result.message);
@@ -30,6 +30,25 @@ function takeLeaveAction(leaveId, action) {
         console.error("Error updating leave:", err);
         alert("Something went wrong while updating leave.");
     });
+}
+
+function showRejectBox(leaveId) {
+    // show rejection box
+    const form = document.getElementById(`leaveForm-${leaveId}`);
+    const rejectionDiv = form.querySelector(".rejection");
+    rejectionDiv.style.display = "block";
+}
+
+function confirmReject(leaveId) {
+    const reasonInput = document.getElementById(`rejectReason-${leaveId}`);
+    const reason = reasonInput.value.trim();
+
+    if (!reason) {
+        alert("Please enter a rejection reason.");
+        return;
+    }
+
+    takeLeaveAction(leaveId, 'REJECT', reason);
 }
 
 var coll = document.getElementsByClassName("collapsible");
