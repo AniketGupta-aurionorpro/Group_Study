@@ -196,7 +196,11 @@ function loadLeavesByDate(date) {
 
 			let html = `<h3>Employees on leave for ${date}</h3><ul>`;
 			data.forEach(l => {
-				html += `<li><b>${l.user.name}</b> (${l.user.role}) - Reason: ${l.reason}</li>`;
+				html += `<li><b>${l.user.name}</b> (${l.user.role}) - Reason: ${l.reason}
+				<button class="cancel-btn" 
+       			 onclick="takeLeaveAction(${l.id}, 'CANCEL', 'Leave Cancelled By Admin')">
+        		Cancel
+    			</button></li>`;
 			});
 			html += "</ul>";
 
@@ -277,4 +281,32 @@ function snackbarFunction() {
   var x = document.getElementById("snackbar");
   x.className = "show";
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function takeLeaveAction(leaveId, action, reason = "Leave Approved") {
+	if (!confirm("Are you sure you want to cancel this leave?")) return;
+	
+    const params = new URLSearchParams();
+    params.append("leaveId", leaveId);
+    params.append("action", action);
+    params.append("reason", reason);
+
+    fetch("leaveAction", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert("Leave Cancelled");
+            location.reload();
+        } else {
+            alert(result.message);
+        }
+    })
+    .catch(err => {
+        console.error("Error updating leave:", err);
+        alert("Something went wrong while updating leave.");
+    });
 }

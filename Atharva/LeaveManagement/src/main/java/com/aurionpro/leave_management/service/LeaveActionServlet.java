@@ -1,0 +1,78 @@
+package com.aurionpro.leave_management.service;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import com.aurionpro.leave_management.Dao.LeaveDAO;
+import com.aurionpro.leave_management.model.User;
+import com.google.gson.Gson;
+
+import jakarta.annotation.Resource;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+@WebServlet("/leaveAction")
+public class LeaveActionServlet extends HttpServlet {
+
+    @Resource(name = "jdbc/leave_management")
+    private DataSource dataSource;
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String leaveIdStr = request.getParameter("leaveId");
+        String action = request.getParameter("action");
+        String reason = request.getParameter("reason");
+        HttpSession session = request.getSession();
+        User admin = (User) session.getAttribute("admin");
+
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int leaveId = Integer.parseInt(leaveIdStr);
+            int adminId = admin.getId();
+            LeaveDAO LeaveDao = new LeaveDAO(dataSource);
+
+            boolean success = false;
+            if ("APPROVE".equalsIgnoreCase(action)) {
+                success = LeaveDao.updateLeaveStatus(leaveId, "APPROVED", adminId, reason);
+                if (success) {
+                    boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "APPROVED");
+                    boolean updation = LeaveDao.updateBalance(leaveId);
+                    success = leaveNotification && updation; // final success only if both succeed
+                }
+            } else if ("REJECT".equalsIgnoreCase(action)) {
+                success = LeaveDao.updateLeaveStatus(leaveId, "REJECTED", adminId, reason);
+                if (success) {
+                    boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "REJECTED");
+                    success = leaveNotification;
+                }
+            }
+            else if ("CANCEL".equalsIgnoreCase(action)) {
+                success = LeaveDao.updateLeaveStatus(leaveId, "REJECTED", adminId, reason);
+                if (success) {
+                	boolean leaveNotification = LeaveDao.addLeaveNotification(leaveId, "Cancelled");
+                    boolean updation = LeaveDao.updateBalanceCancel(leaveId);
+                    success = leaveNotification && updation;
+                }
+            }
+
+            result.put("success", success);
+            result.put("message", success ? "Leave " + action.toLowerCase() + "d successfully." : "Failed to update leave.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "Server error");
+        }
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        new Gson().toJson(result, response.getWriter());
+    }
+}
+
