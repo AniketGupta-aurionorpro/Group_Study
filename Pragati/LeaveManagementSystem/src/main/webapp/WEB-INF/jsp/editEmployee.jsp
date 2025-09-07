@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="com.leave.system.model.User" %>
+<%@ page import="com.aurionpro.leave_management.model.User" %>
 <%
     String userName = (String) session.getAttribute("userName");
     String role = (String) session.getAttribute("role");
