@@ -166,11 +166,12 @@ public class LeaveController extends HttpServlet {
             leave.setEndDate(sqlEndDate);
             leave.setReason(reason);
 
+         // ...
             leaveService.applyLeave(leave);
-
             request.setAttribute("message", "Leave application submitted successfully!");
-            doGet(request, response);
-
+            // Redirect to a GET URL to prevent duplicate form submission
+            response.sendRedirect(request.getContextPath() + "/manager/leave?status=success");
+        
         } catch (ParseException e) {
             request.setAttribute("error", "Invalid date format. Please use YYYY-MM-DD.");
             doGet(request, response);
