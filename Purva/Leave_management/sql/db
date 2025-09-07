@@ -1,1 +1,100 @@
+DROP DATABASE IF EXISTS leave_management;
+CREATE DATABASE leave_management;
+USE leave_management;
 
+-- 1. Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    role ENUM('ADMIN', 'MANAGER', 'EMPLOYEE') NOT NULL,
+    manager_id INT, -- Null for admin, used to link employee to manager and manager to admin
+    salary DECIMAL(10, 2),
+    joined_date DATE,
+    -- Self-referencing foreign key for manager hierarchy
+    FOREIGN KEY (manager_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- 2. Leaves Table
+CREATE TABLE leaves (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    start_date DATE,
+    end_date DATE,
+    reason TEXT,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+    applied_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    approved_by INT,
+    approved_on TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Add a column to store the reason for a leave rejection
+ALTER TABLE leaves ADD COLUMN rejection_reason TEXT;
+
+-- 3. Attendance Table
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    date DATE,
+    status ENUM('PRESENT', 'ABSENT', 'LEAVE') NOT NULL,
+    marked_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 4. Leave Balance Table
+-- Drop the existing leave_balance table to create a new one with a better schema
+DROP TABLE IF EXISTS leave_balance;
+
+-- 4. Create the Leave Balance Table with a schema that matches your Java code
+CREATE TABLE leave_balance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    year INT,
+    total_yearly_leave INT DEFAULT 24,
+    yearly_leave_taken INT DEFAULT 0,
+    -- total_monthly_leave INT DEFAULT 2,
+    -- monthly_leave_taken INT DEFAULT 0,
+    -- Add a foreign key constraint to link with the users table
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 5. Notifications Table
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    receiver_id INT,
+    message TEXT,
+    seen BOOLEAN DEFAULT FALSE,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+SELECT * FROM leaves;
+SELECT * FROM users;
+SELECT * FROM leave_balance;
+
+INSERT INTO users (id, name, email, password, role, manager_id) VALUES
+(1, 'Admin Name', 'admin@test.com', 'password', 'ADMIN', NULL),
+(2, 'Test Manager', 'manager@test.com', 'password', 'MANAGER', 1);
+
+UPDATE leaves
+SET status = 'APPROVED', approved_by = 1, approved_on = NOW()
+WHERE id = 1;
+
+UPDATE leaves
+SET status = 'REJECTED',
+    approved_by = 1,
+    approved_on = NOW(),
+    rejection_reason = 'nahi dunga'
+WHERE id = 7;
+
+
+-- THIS IS THE MISSING INSERT STATEMENT
+INSERT INTO leave_balance (user_id, year, yearly_leave_taken)
+VALUES (2, 2025, 0);
+
+UPDATE leave_balance
+SET yearly_leave_taken = 1
+WHERE user_id = 2 AND year = YEAR(CURRENT_DATE());
