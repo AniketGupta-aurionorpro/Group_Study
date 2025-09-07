@@ -1,0 +1,255 @@
+/* ----------------- Sidebar and Main Layout ----------------- */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: linear-gradient(180deg, #2c3e50, #34495e);
+    color: white;
+    padding-top: 30px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.sidebar h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #ecf0f1;
+    font-size: 15px;
+    border-left: 4px solid transparent;
+    border-radius: 4px 0 0 4px;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background: #1abc9c;
+    border-left: 4px solid #16a085;
+    color: #fff;
+}
+
+.main {
+    margin-left: 220px;
+    padding: 30px;
+    transition: margin-left 0.3s ease;
+}
+
+/* ----------------- Form Styling (Increased Size) ----------------- */
+.main h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.main form {
+    background-color: #ffffff;
+    max-width: 700px;        /* increased from 500px */
+    margin: 20px auto;
+    padding: 40px 50px;      /* increased padding */
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.main form:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+}
+
+.main label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.main input[type="text"],
+.main input[type="email"],
+.main input[type="password"],
+.main input[type="number"],
+.main select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.main input:focus,
+.main select:focus {
+    border-color: #1f78d1;
+    box-shadow: 0 0 8px rgba(31, 120, 209, 0.4);
+    outline: none;
+}
+
+.main button {
+    background-color: #1f78d1;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.main button:hover {
+    background-color: #155a9b;
+    transform: translateY(-2px);
+}
+
+/* ----------------- Messages ----------------- */
+.main p {
+    text-align: center;
+    font-weight: bold;
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.main p.success {
+    color: #27ae60;
+}
+
+.main p.error {
+    color: #e74c3c;
+}
+
+/* ----------------- Table Styling ----------------- */
+.main table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    table-layout: fixed;
+}
+
+.main th, .main td {
+    padding: 10px 12px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.main th {
+    background-color: #1f78d1;
+    color: #fff;
+    font-weight: 600;
+}
+
+.main tr:nth-child(even) {
+    background-color: #f2f6fa;
+}
+
+.main tr:hover {
+    background-color: #e1f5fe;
+}
+
+/* ----------------- Table Buttons ----------------- */
+td button, td form button {
+    padding: 4px 8px;
+    font-size: 13px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 5px;
+    min-width: 50px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Edit button - Green */
+td button.editBtn {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+td button.editBtn:hover {
+    background-color: #1e8449;
+    transform: translateY(-1px);
+}
+
+/* Delete button - Orange */
+td button.deleteBtn {
+    background-color: #e67e22;
+    color: #fff;
+}
+
+td button.deleteBtn:hover {
+    background-color: #ca6f1e;
+    transform: translateY(-1px);
+}
+
+/* Inline forms inside table */
+td form { display: inline-block; margin: 0; vertical-align: middle; }
+
+/* Edit row form */
+.editForm { 
+    display: none; 
+    margin-top: 10px;
+}
+
+.editForm td { background-color: #f9f9f9; }
+
+/* Manager field hidden initially */
+#managerField {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Smooth fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------- Search Box ----------------- */
+input[type="text"].searchBox {
+    width: 250px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+/* ----------------- Responsive Design ----------------- */
+@media (max-width: 768px) {
+    .sidebar { width: 180px; }
+    .main { margin-left: 180px; padding: 20px; }
+    .main form { max-width: 100%; padding: 30px 35px; }
+}
+
+@media (max-width: 500px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .main { margin-left: 0; padding: 15px; }
+    .main form { padding: 25px; }
+    input[type="text"].searchBox { width: 100%; }
+}

@@ -1,0 +1,76 @@
+/* General page style */
+body { 
+    font-family: Arial, sans-serif; 
+    background: #f4f6f9; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login box */
+.box { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 12px; 
+    width: 320px; 
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+.box h2 { 
+    text-align: center; 
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Input fields */
+.box input, .box select { 
+    width: 100%; 
+    padding: 10px; 
+    margin: 10px 0; 
+    border-radius: 8px; 
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+/* Hover/Focus effect */
+.box input:focus, .box select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,123,255,0.4);
+}
+
+/* Dropdown */
+.box select { 
+    background: #fff;
+    cursor: pointer;
+}
+
+/* Button */
+.box button { 
+    width: 100%; 
+    padding: 12px; 
+    margin-top: 10px;
+    border-radius: 8px; 
+    border: none; 
+    background: #408080; 
+    color: white; 
+    cursor: pointer; 
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.box button:hover { 
+    background: #0056b3; 
+}
+
+/* Error message */
+p {
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    margin-top: 10px;
+}
